@@ -12,10 +12,8 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
-local plugins_list = { 'telescope' }
-
+local plugins_list = { 'undotree' ,'which-key', 'telescope' , 'tokyonight' , 'tree-sitter', "playground", "nvim-cmp" ,"lsp", "git-fugitive"}
 local plugins = {}
-
 for i = 1, #plugins_list do
     table.insert(plugins, { require('plugin.' .. plugins_list[i]) })
 end
