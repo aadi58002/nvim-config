@@ -3,7 +3,7 @@ return {
     'folke/tokyonight.nvim',
     opts = {
         style = "moon",
-        transparent = false,
+        transparent = true,
     },
     config = function(_, opts)
         require("tokyonight").setup(opts)

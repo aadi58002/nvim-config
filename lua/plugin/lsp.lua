@@ -1,31 +1,30 @@
 -- plugins/playground.lua:
 return {
-    'neovim/nvim-lspconfig',
-    version = false,
+    'VonHeikemen/lsp-zero.nvim',
+    branch = 'v2.x',
     dependencies = {
-        'nvim-lua/plenary.nvim',
-        'hrsh7th/nvim-cmp',
-        'hrsh7th/cmp-nvim-lsp'
+        -- LSP Support
+        { 'neovim/nvim-lspconfig' }, -- Required
+
+        -- Autocompletion
+        { 'hrsh7th/nvim-cmp' }, -- Required
+        { 'hrsh7th/cmp-nvim-lsp' }, -- Required
+        { 'L3MON4D3/LuaSnip' }, -- Required
     },
     config = function()
-        -- Add additional capabilities supported by nvim-cmp
-        local capabilities = require("cmp_nvim_lsp").default_capabilities()
+        local lsp = require('lsp-zero').preset({})
 
-        local lspconfig = require('lspconfig')
+        lsp.on_attach(function(client, bufnr)
+            lsp.default_keymaps({ buffer = bufnr })
+        end)
 
-        -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
-        local servers = { 'ccls', 'rust_analyzer', 'pyright', 'tsserver' }
-        for _, lsp in ipairs(servers) do
-            lspconfig[lsp].setup {
-                -- on_attach = my_custom_on_attach,
-                capabilities = capabilities,
-            }
-        end
+        -- When you don't have mason.nvim installed
+        -- You'll need to list the servers installed in your system
+        lsp.setup_servers({ 'tsserver', 'rust_analyzer' })
 
-        require('cmp').setup({
-            sources = {
-                { name = 'nvim_lsp' },
-            },
-        })
+        -- (Optional) Configure lua language server for neovim
+        require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
+
+        lsp.setup()
     end
 }
